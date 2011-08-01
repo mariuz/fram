@@ -283,7 +283,7 @@ void SettingsDialog::loadFromSettings()
     // Accessibility
 #if QT_VERSION >= 0x040600 || defined(WEBKIT_TRUNK)
     settings.beginGroup(QLatin1String("WebView"));
-    enableAccessKeys->setChecked(settings.value(QLatin1String("enableAccessKeys"), true).toBool());
+    enableAccessKeys->setChecked(settings.value(QLatin1String("enableAccessKeys"), false).toBool());
     settings.endGroup();
 #else
     enableAccessKeys->setEnabled(false);
