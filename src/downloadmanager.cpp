@@ -255,12 +255,9 @@ void DownloadItem::stop()
 
 void DownloadItem::open()
 {
-    if (m_finishedDownloading) {
-            QFileInfo info(m_output);
-            QUrl url = QUrl::fromLocalFile(info.absoluteFilePath());
-            QDesktopServices::openUrl(url);
-
-    }
+    QFileInfo info(m_output);
+    QUrl url = QUrl::fromLocalFile(info.absoluteFilePath());
+    QDesktopServices::openUrl(url);
 }
 
 void DownloadItem::tryAgain()
