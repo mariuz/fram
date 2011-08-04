@@ -139,7 +139,7 @@ TabWidget::TabWidget(QWidget *parent)
     m_closeTabAction = new QAction(this);
     m_closeTabAction->setShortcuts(QKeySequence::Close);
     m_closeTabAction->setIcon(QIcon(QLatin1String(":graphics/closetab.png")));
-#if QT_VERSION < 0x040600 || (QT_VERSION >= 0x040600 && !defined(Q_WS_X11))
+#if !defined(Q_WS_X11)
     m_closeTabAction->setIconVisibleInMenu(false);
 #endif
     connect(m_closeTabAction, SIGNAL(triggered()), this, SLOT(closeTab()));
@@ -148,7 +148,7 @@ TabWidget::TabWidget(QWidget *parent)
     connect(m_bookmarkTabsAction, SIGNAL(triggered()), this, SLOT(bookmarkTabs()));
 
     m_newTabAction->setIcon(QIcon(QLatin1String(":graphics/addtab.png")));
-#if QT_VERSION < 0x040600 || (QT_VERSION >= 0x040600 && !defined(Q_WS_X11))
+#if !defined(Q_WS_X11)
     m_newTabAction->setIconVisibleInMenu(false);
 #endif
 
