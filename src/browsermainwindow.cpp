@@ -729,14 +729,14 @@ void BrowserMainWindow::setupMenu()
     m_historyBackAction = new QAction(this);
     m_tabWidget->addWebAction(m_historyBackAction, QWebPage::Back);
     m_historyBackAction->setShortcuts(QKeySequence::Back);
-#if QT_VERSION < 0x040600 || (QT_VERSION >= 0x040600 && !defined(Q_WS_X11))
+#if !defined(Q_WS_X11)
     m_historyBackAction->setIconVisibleInMenu(false);
 #endif
 
     m_historyForwardAction = new QAction(this);
     m_tabWidget->addWebAction(m_historyForwardAction, QWebPage::Forward);
     m_historyForwardAction->setShortcuts(QKeySequence::Forward);
-#if QT_VERSION < 0x040600 || (QT_VERSION >= 0x040600 && !defined(Q_WS_X11))
+#if !defined(Q_WS_X11)
     m_historyForwardAction->setIconVisibleInMenu(false);
 #endif
 
@@ -755,7 +755,7 @@ void BrowserMainWindow::setupMenu()
     historyActions.append(m_tabWidget->recentlyClosedTabsAction());
     historyActions.append(m_historyRestoreLastSessionAction);
     m_historyMenu->setInitialActions(historyActions);
-#if QT_VERSION >= 0x040600 && defined(Q_WS_X11)
+#if defined(Q_WS_X11)
     m_historyRestoreLastSessionAction->setIcon(QIcon::fromTheme(QLatin1String("document-revert")));
     m_historyHomeAction->setIcon(QIcon::fromTheme(QLatin1String("go-home")));
 #endif
@@ -775,7 +775,7 @@ void BrowserMainWindow::setupMenu()
 
     m_bookmarksAddAction = new QAction(this);
     m_bookmarksAddAction->setIcon(QIcon(QLatin1String(":addbookmark.png")));
-#if QT_VERSION < 0x040600 || (QT_VERSION >= 0x040600 && !defined(Q_WS_X11))
+#if !defined(Q_WS_X11)
     m_bookmarksAddAction->setIconVisibleInMenu(false);
 #endif
     connect(m_bookmarksAddAction, SIGNAL(triggered()),
@@ -1532,11 +1532,7 @@ void BrowserMainWindow::aboutToShowWindowMenu()
     m_windowMenu->addSeparator();
     QAction *downloadManagerAction = m_windowMenu->addAction(tr("Downloads"), this, SLOT(downloadManager()), QKeySequence(tr("Ctrl+Y", "Download Manager")));
 
-#if QT_VERSION >= 0x040600
     downloadManagerAction->setIcon(QIcon::fromTheme(QLatin1String("emblem-downloads")));
-#else
-    Q_UNUSED(downloadManagerAction);
-#endif
 
     m_windowMenu->addSeparator();
     QList<BrowserMainWindow*> windows = BrowserApplication::instance()->mainWindows();
