@@ -452,12 +452,6 @@ void SettingsDialog::saveToSettings()
 void SettingsDialog::accept()
 {
     saveToSettings();
-    // Due to a bug in Qt <= 4.5.1, enabling/disabling cache requires the browser to be restarted.
-    if (QLatin1String(qVersion()) <= QLatin1String("4.5.1") && networkCache->isChecked() != m_cacheEnabled) {
-        QMessageBox::information(this, tr("Restart required"),
-                                 tr("The network cache configuration has changed. "
-                                    "So that it can be taken into account, the browser has to be restarted."));
-    }
     QDialog::accept();
 }
 
