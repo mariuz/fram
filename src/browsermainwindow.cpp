@@ -1369,6 +1369,7 @@ void BrowserMainWindow::zoomOut()
 void BrowserMainWindow::viewFullScreen(bool makeFullScreen)
 {
     if (makeFullScreen) {
+        setUnifiedTitleAndToolBarOnMac(false);
         setWindowState(windowState() | Qt::WindowFullScreen);
 
         menuBar()->hide();
@@ -1376,6 +1377,7 @@ void BrowserMainWindow::viewFullScreen(bool makeFullScreen)
     } else {
         setWindowState(windowState() & ~Qt::WindowFullScreen);
 
+        setUnifiedTitleAndToolBarOnMac(true);
         menuBar()->setVisible(m_menuBarVisible);
         statusBar()->setVisible(m_statusBarVisible);
     }
