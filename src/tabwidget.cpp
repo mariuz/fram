@@ -171,12 +171,10 @@ TabWidget::TabWidget(QWidget *parent)
     m_recentlyClosedTabsAction->setMenu(m_recentlyClosedTabsMenu);
     m_recentlyClosedTabsAction->setEnabled(false);
 
-#ifndef Q_WS_MAC // can't seem to figure out the background color :(
     addTabButton = new QToolButton(this);
     addTabButton->setDefaultAction(m_newTabAction);
     addTabButton->setAutoRaise(true);
     addTabButton->setToolButtonStyle(Qt::ToolButtonIconOnly);
-#endif
 
     connect(m_tabBar, SIGNAL(tabCloseRequested(int)),
             this, SLOT(closeTab(int)));
@@ -659,11 +657,6 @@ void TabWidget::webViewLoadFinished(bool ok)
         QLabel *label = animationLabel(index, true);
         if (label->movie())
             label->movie()->stop();
-#if defined(Q_WS_MAC)
-        QTabBar::ButtonPosition side = m_tabBar->freeSide();
-        m_tabBar->setTabButton(index, side, 0);
-        delete label;
-#endif
     }
     webViewIconChanged();
 
@@ -681,14 +674,12 @@ void TabWidget::webViewIconChanged()
     WebView *webView = qobject_cast<WebView*>(sender());
     int index = webViewIndex(webView);
     if (-1 != index) {
-#if !defined(Q_WS_MAC)
         QIcon icon = BrowserApplication::instance()->icon(webView->url());
         QLabel *label = animationLabel(index, false);
         QMovie *movie = label->movie();
         delete movie;
         label->setMovie(0);
         label->setPixmap(icon.pixmap(16, 16));
-#endif
     }
 }
 
@@ -852,10 +843,8 @@ void TabWidget::loadSettings()
     QSettings settings;
     settings.beginGroup(QLatin1String("tabs"));
     bool newTabButtonInRightCorner = settings.value(QLatin1String("newTabButtonInRightCorner"), true).toBool();
-#ifndef Q_WS_MAC
     setCornerWidget(addTabButton, newTabButtonInRightCorner ? Qt::TopRightCorner : Qt::TopLeftCorner);
     addTabButton->show();
-#endif
 
     bool oneCloseButton = settings.value(QLatin1String("oneCloseButton"), false).toBool();
     if (oneCloseButton) {

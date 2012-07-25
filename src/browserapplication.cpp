@@ -134,11 +134,8 @@ BrowserApplication::BrowserApplication(int &argc, char **argv)
         return;
 #endif
 
-#if defined(Q_WS_MAC)
-    QApplication::setQuitOnLastWindowClosed(false);
-#else
     QApplication::setQuitOnLastWindowClosed(true);
-#endif
+
 
     QDesktopServices::setUrlHandler(QLatin1String("http"), this, "openUrl");
 
@@ -150,11 +147,6 @@ BrowserApplication::BrowserApplication(int &argc, char **argv)
     settings.beginGroup(QLatin1String("sessions"));
     m_lastSession = settings.value(QLatin1String("lastSession")).toByteArray();
     settings.endGroup();
-
-#if defined(Q_WS_MAC)
-    connect(this, SIGNAL(lastWindowClosed()),
-            this, SLOT(lastWindowClosed()));
-#endif
 
     // setting this in the postLaunch actually takes a lot more time
     // because the event has to be propagated to everyone.
@@ -178,15 +170,6 @@ BrowserApplication::~BrowserApplication()
     delete s_autoFillManager;
 }
 
-#if defined(Q_WS_MAC)
-void BrowserApplication::lastWindowClosed()
-{
-    clean();
-    BrowserMainWindow *mw = new BrowserMainWindow;
-    mw->goHome();
-    m_mainWindows.prepend(mw);
-}
-#endif
 
 BrowserApplication *BrowserApplication::instance()
 {
@@ -504,33 +487,6 @@ bool BrowserApplication::restoreLastSession()
     }
     return true;
 }
-
-#if defined(Q_WS_MAC)
-bool BrowserApplication::event(QEvent *event)
-{
-    switch (event->type()) {
-    case QEvent::ApplicationActivate: {
-        clean();
-        if (!m_mainWindows.isEmpty()) {
-            BrowserMainWindow *mw = mainWindow();
-            if (mw && !mw->isMinimized()) {
-                mainWindow()->show();
-            }
-            return true;
-        }
-    }
-    case QEvent::FileOpen:
-        if (!m_mainWindows.isEmpty()) {
-            QString file = static_cast<QFileOpenEvent*>(event)->file();
-            mainWindow()->tabWidget()->loadUrl(QUrl::fromLocalFile(file));
-            return true;
-        }
-    default:
-        break;
-    }
-    return QApplication::event(event);
-}
-#endif
 
 void BrowserApplication::askDesktopToOpenUrl(const QUrl &url)
 {

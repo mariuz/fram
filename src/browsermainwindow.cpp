@@ -385,10 +385,6 @@ bool BrowserMainWindow::restoreState(const QByteArray &state)
         QMainWindow::restoreState(qMainWindowState);
     }
 
-#if defined(Q_WS_MAC)
-    m_bookmarksToolbarFrame->setVisible(m_bookmarksToolbar->isVisible());
-#endif
-
     return true;
 }
 
