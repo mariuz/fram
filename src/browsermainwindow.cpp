@@ -65,7 +65,6 @@
 #include "browsermainwindow.h"
 
 #include "aboutdialog.h"
-#include "adblockmanager.h"
 #include "addbookmarkdialog.h"
 #include "autosaver.h"
 #include "bookmarksdialog.h"
@@ -115,9 +114,6 @@ BrowserMainWindow::BrowserMainWindow(QWidget *parent, Qt::WindowFlags flags)
     , m_navigationBar(0)
     , m_navigationSplitter(0)
     , m_toolbarSearch(0)
-#if defined(Q_WS_MAC)
-    , m_bookmarksToolbarFrame(0)
-#endif
     , m_bookmarksToolbar(0)
     , m_tabWidget(new TabWidget(this))
     , m_autoSaver(new AutoSaver(this))
@@ -144,38 +140,8 @@ BrowserMainWindow::BrowserMainWindow(QWidget *parent, Qt::WindowFlags flags)
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setSpacing(0);
     layout->setMargin(0);
-#if defined(Q_WS_MAC)
-    m_bookmarksToolbarFrame = new QFrame(this);
-    m_bookmarksToolbarFrame->setLineWidth(1);
-    m_bookmarksToolbarFrame->setMidLineWidth(0);
-    m_bookmarksToolbarFrame->setFrameShape(QFrame::HLine);
-    m_bookmarksToolbarFrame->setFrameShadow(QFrame::Raised);
-    QPalette fp = m_bookmarksToolbarFrame->palette();
-    fp.setColor(QPalette::Active, QPalette::Light, QColor(64, 64, 64));
-    fp.setColor(QPalette::Active, QPalette::Dark, QColor(192, 192, 192));
-    fp.setColor(QPalette::Inactive, QPalette::Light, QColor(135, 135, 135));
-    fp.setColor(QPalette::Inactive, QPalette::Dark, QColor(226, 226, 226));
-    m_bookmarksToolbarFrame->setAttribute(Qt::WA_MacNoClickThrough, true);
-    m_bookmarksToolbarFrame->setPalette(fp);
-    layout->addWidget(m_bookmarksToolbarFrame);
-
-    layout->addWidget(m_bookmarksToolbar);
-    QPalette p = m_bookmarksToolbar->palette();
-    p.setColor(QPalette::Active, QPalette::Window, QColor(150, 150, 150));
-    p.setColor(QPalette::Inactive, QPalette::Window, QColor(207, 207, 207));
-    m_bookmarksToolbar->setAttribute(Qt::WA_MacNoClickThrough, true);
-    m_bookmarksToolbar->setAutoFillBackground(true);
-    m_bookmarksToolbar->setPalette(p);
-    m_bookmarksToolbar->setBackgroundRole(QPalette::Window);
-    m_bookmarksToolbar->setMaximumHeight(19);
-
-    QWidget *w = new QWidget(this);
-    w->setMaximumHeight(0);
-    layout->addWidget(w); // <- OS X tab widget style bug
-#else
     addToolBarBreak();
     addToolBar(m_bookmarksToolbar);
-#endif
     layout->addWidget(m_tabWidget);
     centralWidget->setLayout(layout);
     setCentralWidget(centralWidget);
@@ -209,9 +175,6 @@ BrowserMainWindow::BrowserMainWindow(QWidget *parent, Qt::WindowFlags flags)
     loadDefaultState();
     m_tabWidget->newTab();
     m_tabWidget->currentLocationBar()->setFocus();
-#if defined(Q_WS_MAC)
-    m_navigationBar->setIconSize(QSize(18, 18));
-#endif
 
     // Add each item in the menu bar to the main window so
     // if the menu bar is hidden the shortcuts still work.
@@ -221,9 +184,6 @@ BrowserMainWindow::BrowserMainWindow(QWidget *parent, Qt::WindowFlags flags)
             actions += action->menu()->actions();
         addAction(action);
     }
-#if defined(Q_WS_MAC)
-    setWindowIcon(QIcon());
-#endif
 #if defined(Q_WS_X11)
     setWindowRole(QLatin1String("browser"));
 #endif
@@ -835,11 +795,6 @@ void BrowserMainWindow::setupMenu()
     m_toolsUserAgentMenu = new UserAgentMenu(m_toolsMenu);
     m_toolsMenu->addMenu(m_toolsUserAgentMenu);
 
-    m_adBlockDialogAction = new QAction(m_toolsMenu);
-    connect(m_adBlockDialogAction, SIGNAL(triggered()),
-            AdBlockManager::instance(), SLOT(showDialog()));
-    m_toolsMenu->addAction(m_adBlockDialogAction);
-
     m_toolsMenu->addSeparator();
     m_toolsPreferencesAction = new QAction(m_toolsMenu);
     m_toolsPreferencesAction->setMenuRole(QAction::PreferencesRole);
@@ -989,8 +944,7 @@ void BrowserMainWindow::retranslate()
     m_toolsPreferencesAction->setText(tr("Options..."));
     m_toolsPreferencesAction->setShortcut(tr("Ctrl+,"));
     m_toolsSearchManagerAction->setText(tr("Configure Search Engines..."));
-    m_toolsUserAgentMenu->setTitle(tr("User Agent"));
-    m_adBlockDialogAction->setText(tr("&Ad Block..."));
+    m_toolsUserAgentMenu->setTitle(tr("User Agent"));    
 
     m_helpMenu->setTitle(tr("&Help"));
     m_helpChangeLanguageAction->setText(tr("Switch application language "));
@@ -1007,7 +961,6 @@ void BrowserMainWindow::retranslate()
 
 void BrowserMainWindow::setupToolBar()
 {
-    setUnifiedTitleAndToolBarOnMac(true);
     m_navigationBar = new QToolBar(this);
     m_navigationBar->setObjectName(QLatin1String("NavigationToolBar"));
     addToolBar(m_navigationBar);
@@ -1108,14 +1061,8 @@ void BrowserMainWindow::viewBookmarksBar()
 {
     if (m_bookmarksToolbar->isVisible()) {
         m_bookmarksToolbar->hide();
-#if defined(Q_WS_MAC)
-        m_bookmarksToolbarFrame->hide();
-#endif
     } else {
         m_bookmarksToolbar->show();
-#if defined(Q_WS_MAC)
-        m_bookmarksToolbarFrame->show();
-#endif
     }
     m_autoSaver->changeOccurred();
 }
@@ -1168,11 +1115,8 @@ void BrowserMainWindow::updateWindowTitle(const QString &title)
     if (title.isEmpty()) {
         setWindowTitle(QApplication::applicationName());
     } else {
-#if defined(Q_WS_MAC)
-        setWindowTitle(title);
-#else
         setWindowTitle(tr("%1 - Arora", "Page title and Browser name").arg(title));
-#endif
+
     }
 }
 
@@ -1326,7 +1270,7 @@ void BrowserMainWindow::mousePressEvent(QMouseEvent *event)
 void BrowserMainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange)
-        retranslate();
+        //retranslate();
     QMainWindow::changeEvent(event);
 }
 
@@ -1369,7 +1313,6 @@ void BrowserMainWindow::zoomOut()
 void BrowserMainWindow::viewFullScreen(bool makeFullScreen)
 {
     if (makeFullScreen) {
-        setUnifiedTitleAndToolBarOnMac(false);
         setWindowState(windowState() | Qt::WindowFullScreen);
 
         menuBar()->hide();
@@ -1377,7 +1320,6 @@ void BrowserMainWindow::viewFullScreen(bool makeFullScreen)
     } else {
         setWindowState(windowState() & ~Qt::WindowFullScreen);
 
-        setUnifiedTitleAndToolBarOnMac(true);
         menuBar()->setVisible(m_menuBarVisible);
         statusBar()->setVisible(m_statusBarVisible);
     }

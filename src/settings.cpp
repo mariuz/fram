@@ -129,8 +129,7 @@ void SettingsDialog::loadDefaults()
     enableJavascript->setChecked(defaultSettings->testAttribute(QWebSettings::JavascriptEnabled));
     enablePlugins->setChecked(defaultSettings->testAttribute(QWebSettings::PluginsEnabled));
     enableImages->setChecked(defaultSettings->testAttribute(QWebSettings::AutoLoadImages));
-    enableLocalStorage->setChecked(defaultSettings->testAttribute(QWebSettings::LocalStorageEnabled));
-    clickToFlash->setChecked(false);
+    enableLocalStorage->setChecked(defaultSettings->testAttribute(QWebSettings::LocalStorageEnabled));    
     cookieSessionCombo->setCurrentIndex(0);
     filterTrackingCookiesCheckbox->setChecked(false);
 
@@ -196,8 +195,7 @@ void SettingsDialog::loadFromSettings()
     enablePlugins->setChecked(settings.value(QLatin1String("enablePlugins"), enablePlugins->isChecked()).toBool());
     enableImages->setChecked(settings.value(QLatin1String("enableImages"), enableImages->isChecked()).toBool());
     enableLocalStorage->setChecked(settings.value(QLatin1String("enableLocalStorage"), enableLocalStorage->isChecked()).toBool());
-    userStyleSheet->setText(QString::fromUtf8(settings.value(QLatin1String("userStyleSheet")).toUrl().toEncoded()));
-    clickToFlash->setChecked(settings.value(QLatin1String("enableClickToFlash"), clickToFlash->isChecked()).toBool());
+    userStyleSheet->setText(QString::fromUtf8(settings.value(QLatin1String("userStyleSheet")).toUrl().toEncoded()));    
     int minimumFontSize = settings.value(QLatin1String("minimumFontSize"), 0).toInt();
     minimFontSizeCheckBox->setChecked(minimumFontSize != 0);
     if (minimumFontSize != 0)
@@ -342,8 +340,7 @@ void SettingsDialog::saveToSettings()
     if (QFile::exists(userStyleSheetString))
         settings.setValue(QLatin1String("userStyleSheet"), QUrl::fromLocalFile(userStyleSheetString));
     else
-        settings.setValue(QLatin1String("userStyleSheet"), QUrl::fromEncoded(userStyleSheetString.toUtf8()));
-    settings.setValue(QLatin1String("enableClickToFlash"), clickToFlash->isChecked());
+        settings.setValue(QLatin1String("userStyleSheet"), QUrl::fromEncoded(userStyleSheetString.toUtf8()));    
 
     if (minimFontSizeCheckBox->isChecked())
         settings.setValue(QLatin1String("minimumFontSize"), minimumFontSizeSpinBox->value());

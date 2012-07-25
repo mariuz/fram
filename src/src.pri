@@ -89,7 +89,6 @@ SOURCES += \
     webview.cpp \
     webviewsearch.cpp
 
-include(adblock/adblock.pri)
 include(bookmarks/bookmarks.pri)
 include(history/history.pri)
 include(locationbar/locationbar.pri)
@@ -114,10 +113,6 @@ DISTFILES += ../AUTHORS \
 win32 {
     RC_FILE = $$PWD/browser.rc
     LIBS += -luser32
-}
-
-os2 {
-    RC_FILE = $$PWD/browser_os2.rc
 }
 
 mac {

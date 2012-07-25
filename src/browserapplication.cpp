@@ -90,7 +90,7 @@
 #include <windows.h>
 #endif
 
-// #define BROWSERAPPLICATION_DEBUG
+#define BROWSERAPPLICATION_DEBUG
 
 DownloadManager *BrowserApplication::s_downloadManager = 0;
 HistoryManager *BrowserApplication::s_historyManager = 0;

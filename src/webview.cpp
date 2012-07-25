@@ -64,9 +64,6 @@
 
 #include "webview.h"
 
-#include "adblockdialog.h"
-#include "adblockmanager.h"
-#include "adblockpage.h"
 #include "autofillmanager.h"
 #include "addbookmarkdialog.h"
 #include "bookmarksmanager.h"
@@ -336,8 +333,6 @@ void WebView::blockImage()
 {
     if (QAction *action = qobject_cast<QAction*>(sender())) {
         QString imageUrl = action->data().toString();
-        AdBlockDialog *dialog = AdBlockManager::instance()->showDialog();
-        dialog->addCustomRule(imageUrl);
     }
 }
 
@@ -521,7 +516,6 @@ void WebView::loadFinished()
                    << "Url:" << url();
     }
     m_progress = 0;
-    AdBlockManager::instance()->page()->applyRulesToPage(page());
     BrowserApplication::instance()->autoFillManager()->fill(page());
 }
 
