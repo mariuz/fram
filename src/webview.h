@@ -142,15 +142,7 @@ private:
     int m_progress;
     int m_currentZoom;
     QList<int> m_zoomLevels;
-    WebPage *m_page;
-
-    bool m_enableAccessKeys;
-    bool checkForAccessKey(QKeyEvent *event);
-    void showAccessKeys();
-    void makeAccessKeyLabel(const QChar &accessKey, const QWebElement &element);
-    QList<QLabel*> m_accessKeyLabels;
-    QHash<QChar, QWebElement> m_accessKeyNodes;
-    bool m_accessKeysPressed;
+    WebPage *m_page;    
 };
 
 #endif
