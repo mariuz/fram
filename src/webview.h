@@ -135,8 +135,6 @@ private slots:
     void bookmarkLink();
     void searchRequested(QAction *action);
     void addSearchEngine();
-    void hideAccessKeys();
-    void accessKeyShortcut();
 
 private:
     QString m_statusBarText;

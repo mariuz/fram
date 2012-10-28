@@ -279,9 +279,6 @@ void SettingsDialog::loadFromSettings()
     settings.endGroup();
 
     // Accessibility
-    settings.beginGroup(QLatin1String("WebView"));
-    enableAccessKeys->setChecked(settings.value(QLatin1String("enableAccessKeys"), true).toBool());
-    settings.endGroup();
 
     settings.beginGroup(QLatin1String("autofill"));
     autoFillPasswordFormsCheckBox->setChecked(settings.value(QLatin1String("passwordForms"), true).toBool());
@@ -428,9 +425,6 @@ void SettingsDialog::saveToSettings()
     settings.endGroup();
 
     // Accessibility
-    settings.beginGroup(QLatin1String("WebView"));
-    settings.setValue(QLatin1String("enableAccessKeys"), enableAccessKeys->isChecked());
-    settings.endGroup();
 
     BrowserApplication::instance()->loadSettings();
     BrowserApplication::networkAccessManager()->loadSettings();
