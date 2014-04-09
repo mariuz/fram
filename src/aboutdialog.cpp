@@ -38,8 +38,6 @@ AboutDialog::AboutDialog(QWidget *parent)
     name->setText(qApp->applicationName());
     version->setText(qApp->applicationVersion());
     webkitVersion->setText(tr("WebKit version: %1").arg(qWebKitVersion()));
-    connect(authorsButton, SIGNAL(clicked()),
-            this, SLOT(authorsButtonClicked()));
     connect(licenseButton, SIGNAL(clicked()),
             this, SLOT(licenseButtonClicked()));
 }
@@ -75,11 +73,6 @@ void AboutDialog::displayFile(const QString &fileName, const QString &title)
     dialog.setWindowFlags(Qt::Sheet);
     dialog.resize(600, 350);
     dialog.exec();
-}
-
-void AboutDialog::authorsButtonClicked()
-{
-    displayFile(QLatin1String(":AUTHORS"), tr("Authors"));
 }
 
 void AboutDialog::licenseButtonClicked()

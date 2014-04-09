@@ -104,9 +104,7 @@ RESOURCES += \
     $$PWD/data/searchengines/searchengines.qrc \
     $$PWD/htmls/htmls.qrc
 
-DISTFILES += ../AUTHORS \
-    ../ChangeLog \
-    ../LICENSE.GPL2 \
+DISTFILES += ../LICENSE.GPL2 \
     ../LICENSE.GPL3 \
     ../README
 
